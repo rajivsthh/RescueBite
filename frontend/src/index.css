@@ -1,3 +1,137 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Food Waste Optimizer — Editorial sustainability design system.
+   Warm off-white canvas, deep forest green accents, serif display + clean sans.
+   All colors MUST be HSL. */
+
+@layer base {
+  :root {
+    /* Canvas */
+    --background: 40 30% 97%;          /* warm off-white #faf8f3-ish */
+    --foreground: 150 20% 12%;         /* deep ink with green undertone */
+
+    --card: 0 0% 100%;
+    --card-foreground: 150 20% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 150 20% 12%;
+
+    /* Brand: deep forest green */
+    --primary: 152 45% 20%;            /* #1f4d36 */
+    --primary-foreground: 40 30% 97%;
+    --primary-soft: 152 30% 92%;       /* tinted bg for chips */
+
+    --secondary: 40 25% 93%;           /* warm cream */
+    --secondary-foreground: 152 45% 20%;
+
+    --muted: 40 20% 94%;
+    --muted-foreground: 150 10% 38%;
+
+    --accent: 38 60% 55%;              /* warm ochre accent */
+    --accent-foreground: 150 20% 12%;
+
+    --success: 152 50% 35%;
+    --warning: 28 90% 52%;             /* urgent badge */
+    --warning-foreground: 0 0% 100%;
+
+    --destructive: 0 65% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 40 15% 88%;
+    --input: 40 15% 88%;
+    --ring: 152 45% 20%;
+
+    --radius: 0.875rem;
+
+    --shadow-soft: 0 1px 2px hsl(150 20% 12% / 0.04), 0 8px 24px -8px hsl(150 20% 12% / 0.08);
+    --shadow-card: 0 1px 0 hsl(40 15% 88% / 1), 0 12px 40px -16px hsl(150 30% 15% / 0.12);
+    --gradient-hero: radial-gradient(1200px 600px at 80% -10%, hsl(152 35% 88% / 0.6), transparent 60%),
+                     radial-gradient(900px 500px at 0% 100%, hsl(38 60% 88% / 0.5), transparent 60%);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-feature-settings: 'ss01', 'cv11';
+    background-image: var(--gradient-hero);
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3, .font-display {
+    font-family: 'Fraunces', Georgia, serif;
+    font-feature-settings: 'ss01';
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer components {
+  .panel {
+    @apply bg-card rounded-2xl border border-border;
+    box-shadow: var(--shadow-card);
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium;
+    background: hsl(var(--primary-soft));
+    color: hsl(var(--primary));
+  }
+  .chip-warning {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wide;
+    background: hsl(var(--warning));
+    color: hsl(var(--warning-foreground));
+  }
+}
