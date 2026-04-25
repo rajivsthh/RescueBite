@@ -14,6 +14,7 @@ import {
   Store,
 } from "lucide-react";
 import { useMemo } from "react";
+import ImpactRescueMap from "@/components/maps/ImpactRescueMap";
 
 const ImpactPage = () => {
   const { totals, requests, deliveries, events } = useAppStore();
@@ -147,6 +148,8 @@ const ImpactPage = () => {
           );
         })}
       </div>
+
+      <ImpactRescueMap />
 
       <div className="grid lg:grid-cols-3 gap-4 mt-6">
         <Leaderboard title="Top restaurants" entries={restaurantRanking} unit="meals" />

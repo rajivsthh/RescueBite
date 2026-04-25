@@ -1,10 +1,11 @@
 import { useAppStore, Delivery } from "@/store/AppStore";
 import { Button } from "@/components/ui/button";
 import { areaName } from "@/lib/data";
-import { Bike, MapPin, ArrowRight, CheckCircle2, CalendarClock, Route, Sparkles, Clock } from "lucide-react";
+import { Bike, MapPin, ArrowRight, CheckCircle2, CalendarClock, Route, Clock } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Trophy } from "lucide-react";
 import { optimizeRoute } from "@/lib/route";
+import VolunteerRouteMap, { VolunteerRouteStop } from "@/components/maps/VolunteerRouteMap";
 
 const statusStyles: Record<string, string> = {
   available: "bg-primary-soft text-primary",
@@ -20,8 +21,7 @@ const formatSchedule = (ts?: number) => {
 
 const VolunteerPage = () => {
   const { deliveries, acceptDelivery, completeDelivery } = useAppStore();
-  const [optimized, setOptimized] = useState<Record<string, boolean>>({});
-  const [completedStops, setCompletedStops] = useState<Record<string, boolean>>({});
+  const [completedStops, setCompletedStops] = useState<Record<number, boolean>>({});
 
   // Group active deliveries by volunteer to support multi-pickup route optimization.
   const byVolunteer = useMemo(() => {
@@ -56,6 +56,35 @@ const VolunteerPage = () => {
       .slice(0, 5);
   }, [deliveries]);
 
+  const selectedRoute = useMemo(() => {
+    const first = [...byVolunteer.entries()].find(([, ds]) => ds.length > 0);
+    if (!first) return null;
+
+    const [volunteer, ds] = first;
+    const pickups = ds.flatMap((d) =>
+      d.pickups.map((p) => ({ area: p.area, name: p.sourceName, meals: p.meals })),
+    );
+    const dropMeals = ds.reduce((s, d) => s + d.meals, 0);
+    const drop = { area: ds[0].dropArea, name: ds[0].ngoName };
+    const route = optimizeRoute(pickups, drop);
+
+    const stopMeals = new Map<string, number>();
+    pickups.forEach((p) => stopMeals.set(`${p.name}-${p.area}`, p.meals));
+
+    const stops: VolunteerRouteStop[] = route.stops.map((s) => ({
+      name: s.name,
+      area: s.area,
+      kind: s.kind,
+      meals: s.kind === "drop" ? dropMeals : stopMeals.get(`${s.name}-${s.area}`) ?? 0,
+    }));
+
+    return {
+      volunteer,
+      route,
+      stops,
+    };
+  }, [byVolunteer]);
+
   return (
     <div className="max-w-4xl">
       <div className="mb-6">
@@ -71,104 +100,79 @@ const VolunteerPage = () => {
         </div>
       )}
 
-      {/* Multi-delivery route optimizer per volunteer */}
-      {[...byVolunteer.entries()]
-        .filter(([, ds]) => ds.length >= 2)
-        .map(([volunteer, ds]) => {
-          const isOpen = optimized[volunteer];
-          const pickups = ds.flatMap((d) =>
-            d.pickups.map((p) => ({ area: p.area, name: p.sourceName })),
-          );
-          const drop = { area: ds[0].dropArea, name: ds[0].ngoName };
-          const route = optimizeRoute(pickups, drop);
-          return (
-            <div key={volunteer} className="panel p-5 mb-4 border-primary/30">
-              <div className="flex items-center justify-between flex-wrap gap-3">
-                <div>
-                  <div className="text-xs uppercase tracking-widest text-muted-foreground">
-                    Multi-pickup assignment
-                  </div>
-                  <div className="font-display text-lg font-semibold">
-                    {volunteer} · {pickups.length} pickups
-                  </div>
-                </div>
-                <Button
-                  size="sm"
-                  onClick={() =>
-                    setOptimized((s) => ({ ...s, [volunteer]: !s[volunteer] }))
-                  }
-                >
-                  <Sparkles className="h-4 w-4" />
-                  {isOpen ? "Hide route" : "Optimize my route"}
-                </Button>
-              </div>
+      {selectedRoute && (
+        <div className="mb-5 space-y-4">
+          <VolunteerRouteMap
+            volunteerName={selectedRoute.volunteer}
+            stops={selectedRoute.stops}
+            completedStops={completedStops}
+          />
 
-              {isOpen && (
-                <div className="mt-4">
-                  <div className="grid sm:grid-cols-3 gap-3 mb-4">
-                    <RouteStat label="Total distance" value={`${route.totalKm.toFixed(1)} km`} />
-                    <RouteStat label="Est. travel time" value={`${route.totalMinutes} min`} icon={<Clock className="h-3.5 w-3.5" />} />
-                    <RouteStat label="Stops" value={`${route.stops.length}`} />
-                  </div>
-                  <ol className="space-y-2">
-                    {route.stops.map((s, i) => {
-                      const key = `${volunteer}-${i}`;
-                      const done = completedStops[key];
-                      const leg = i > 0 ? route.legDistances[i - 1] : null;
-                      return (
-                        <li
-                          key={key}
-                          className={
-                            "flex items-start gap-3 p-3 rounded-lg border " +
-                            (s.kind === "drop"
-                              ? "bg-primary-soft border-primary/20"
-                              : "bg-secondary/60 border-border")
-                          }
-                        >
-                          <div
-                            className={
-                              "h-7 w-7 shrink-0 rounded-full grid place-items-center text-xs font-semibold " +
-                              (s.kind === "drop"
-                                ? "bg-primary text-primary-foreground"
-                                : "bg-card border border-border text-foreground")
-                            }
-                          >
-                            {i + 1}
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <div className="text-[11px] uppercase tracking-widest text-muted-foreground">
-                              {s.kind === "drop" ? "Deliver" : "Pickup"}
-                              {leg !== null && <> · {leg.toFixed(1)} km from previous</>}
-                            </div>
-                            <div className={"font-medium truncate " + (done ? "line-through opacity-60" : "")}>
-                              {s.name}
-                            </div>
-                            <div className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
-                              <MapPin className="h-3 w-3" /> {areaName(s.area)}
-                            </div>
-                          </div>
-                          <Button
-                            size="sm"
-                            variant={done ? "outline" : "ghost"}
-                            onClick={() =>
-                              setCompletedStops((c) => ({ ...c, [key]: !c[key] }))
-                            }
-                          >
-                            <CheckCircle2 className="h-4 w-4" />
-                            {done ? "Done" : "Mark"}
-                          </Button>
-                        </li>
-                      );
-                    })}
-                  </ol>
-                  <p className="mt-3 text-[11px] text-muted-foreground italic">
-                    Route optimized to minimize travel distance and maximize food freshness.
-                  </p>
-                </div>
-              )}
+          <div className="panel p-5">
+            <div className="grid sm:grid-cols-3 gap-3 mb-4">
+              <RouteStat label="Total distance" value={`${selectedRoute.route.totalKm.toFixed(1)} km`} />
+              <RouteStat label="Est. travel time" value={`${selectedRoute.route.totalMinutes} min`} icon={<Clock className="h-3.5 w-3.5" />} />
+              <RouteStat label="Stops" value={`${selectedRoute.route.stops.length}`} />
             </div>
-          );
-        })}
+
+            <ol className="space-y-2">
+              {selectedRoute.stops.map((s, i) => {
+                const done = !!completedStops[i];
+                const leg = i > 0 ? selectedRoute.route.legDistances[i - 1] : null;
+                return (
+                  <li
+                    key={`${selectedRoute.volunteer}-${i}`}
+                    className={
+                      "flex items-start gap-3 p-3 rounded-lg border " +
+                      (s.kind === "drop"
+                        ? "bg-primary-soft border-primary/20"
+                        : "bg-secondary/60 border-border")
+                    }
+                  >
+                    <div
+                      className={
+                        "h-7 w-7 shrink-0 rounded-full grid place-items-center text-xs font-semibold " +
+                        (done
+                          ? "bg-muted text-muted-foreground"
+                          : s.kind === "drop"
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-card border border-border text-foreground")
+                      }
+                    >
+                      {i + 1}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="text-[11px] uppercase tracking-widest text-muted-foreground">
+                        {s.kind === "drop" ? "Dropoff" : "Pickup"}
+                        {leg !== null && <> · {leg.toFixed(1)} km from previous</>}
+                      </div>
+                      <div className={"font-medium truncate " + (done ? "line-through opacity-60" : "")}>
+                        {s.name}
+                      </div>
+                      <div className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
+                        <MapPin className="h-3 w-3" /> {areaName(s.area)}, Kathmandu · {s.meals} meals
+                      </div>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant={done ? "outline" : "ghost"}
+                      onClick={() =>
+                        setCompletedStops((c) => ({ ...c, [i]: !c[i] }))
+                      }
+                    >
+                      <CheckCircle2 className="h-4 w-4" />
+                      {done ? "Done" : "Mark"}
+                    </Button>
+                  </li>
+                );
+              })}
+            </ol>
+            <p className="mt-3 text-[11px] text-muted-foreground italic">
+              Step list is synced with map marker numbers and route segments.
+            </p>
+          </div>
+        </div>
+      )}
 
       <div className="space-y-3">
         {deliveries.map((d) => <DeliveryCard key={d.id} d={d} onAccept={acceptDelivery} onComplete={completeDelivery} />)}
@@ -337,19 +341,6 @@ const StepDot = ({ index, total, variant }: { index: number; total: number; vari
     }
   >
     {index}
-  </div>
-);
-
-const Stop = ({ label, name, sub }: { label: string; name: string; sub: string }) => (
-  <div className="flex items-start gap-2 flex-1 min-w-[180px] p-3 rounded-lg bg-secondary/60 border border-border">
-    <div className="h-8 w-8 rounded-md bg-primary text-primary-foreground grid place-items-center mt-0.5">
-      <MapPin className="h-4 w-4" />
-    </div>
-    <div className="min-w-0">
-      <div className="text-[11px] uppercase tracking-widest text-muted-foreground">{label}</div>
-      <div className="font-medium truncate">{name}</div>
-      <div className="text-xs text-muted-foreground truncate">{sub}</div>
-    </div>
   </div>
 );
 

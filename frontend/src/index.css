@@ -134,4 +134,86 @@
     background: hsl(var(--warning));
     color: hsl(var(--warning-foreground));
   }
+
+  .emoji-marker-wrap {
+    background: transparent;
+    border: 0;
+  }
+
+  .emoji-marker {
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 9999px;
+    display: grid;
+    place-items: center;
+    font-size: 1rem;
+    border: 1px solid hsl(var(--primary) / 0.25);
+    background: hsl(var(--card));
+    box-shadow: var(--shadow-soft);
+  }
+
+  .emoji-donor {
+    background: hsl(var(--success) / 0.18);
+  }
+
+  .emoji-ngo {
+    background: hsl(var(--primary-soft));
+  }
+
+  .emoji-current {
+    background: hsl(210 80% 92%);
+    border-color: hsl(210 70% 45% / 0.4);
+  }
+
+  .emoji-car {
+    background: hsl(var(--secondary));
+  }
+
+  .emoji-car.pulse {
+    animation: car-pulse 1.25s infinite;
+  }
+
+  .map-number-marker {
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 9999px;
+    display: grid;
+    place-items: center;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: hsl(var(--primary-foreground));
+    background: hsl(var(--primary));
+    border: 1px solid hsl(var(--primary) / 0.35);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .map-number-marker.done {
+    color: hsl(var(--muted-foreground));
+    background: hsl(var(--muted));
+    border-color: hsl(var(--border));
+  }
+
+  .leaflet-container {
+    background: hsl(var(--secondary));
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  .leaflet-popup-content-wrapper {
+    border-radius: 0.75rem;
+  }
+}
+
+@keyframes car-pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 hsl(var(--primary) / 0.35);
+  }
+  70% {
+    transform: scale(1.06);
+    box-shadow: 0 0 0 10px hsl(var(--primary) / 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 hsl(var(--primary) / 0);
+  }
 }
