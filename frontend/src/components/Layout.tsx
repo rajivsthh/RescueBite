@@ -1,8 +1,9 @@
 import { NavLink, Outlet, useLocation } from "react-router-dom";
-import { Leaf, Store, HeartHandshake, Bike, BarChart3, PartyPopper, LineChart } from "lucide-react";
+import { Leaf, House, Store, HeartHandshake, Bike, BarChart3, PartyPopper, LineChart } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
+  { to: "/", label: "Home", icon: House },
   { to: "/restaurant", label: "Restaurant", icon: Store },
   { to: "/event", label: "Event", icon: PartyPopper },
   { to: "/ngo", label: "NGO", icon: HeartHandshake },
@@ -20,7 +21,7 @@ const Layout = () => {
     <div className="min-h-screen flex flex-col">
       <header className="border-b border-border/70 bg-background/70 backdrop-blur-md sticky top-0 z-30">
         <div className="container flex items-center justify-between h-16">
-          <NavLink to="/restaurant" className="flex items-center gap-2">
+          <NavLink to="/" className="flex items-center gap-2">
             <span className="h-9 w-9 rounded-xl bg-primary text-primary-foreground grid place-items-center">
               <Leaf className="h-5 w-5" />
             </span>
