@@ -11,7 +11,7 @@ const Index = () => {
             <span className="h-1.5 w-1.5 rounded-full bg-primary" />
             RescueBite
           </span>
-          <h1 className="font-display text-4xl md:text-5xl font-semibold leading-[1.08] tracking-tight">
+          <h1 className="font-display text-5xl md:text-7xl font-bold leading-[0.98] tracking-[-0.035em]">
             Food shared,
             <span className="italic text-primary"> dignity restored.</span>
           </h1>

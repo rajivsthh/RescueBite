@@ -105,17 +105,41 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background antialiased;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #4a4a4a;
     font-feature-settings: 'ss01', 'cv11';
     background-image: var(--gradient-hero);
     background-attachment: fixed;
   }
 
+  p,
+  li,
+  small,
+  input,
+  select,
+  textarea {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #4a4a4a;
+  }
+
   h1, h2, h3, .font-display {
     font-family: 'Fraunces', Georgia, serif;
     font-feature-settings: 'ss01';
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
+    color: #1a3a2a;
+    font-weight: 700;
+  }
+
+  button {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: none;
   }
 }
 
