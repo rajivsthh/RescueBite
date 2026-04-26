@@ -1,7 +1,7 @@
 import { useAppStore } from "@/store/AppStore";
 import { Button } from "@/components/ui/button";
 import { areaName } from "@/lib/data";
-import { Check, X, Inbox, CalendarClock } from "lucide-react";
+import { Check, X, CalendarClock } from "lucide-react";
 import PriorityBadge from "@/components/PriorityBadge";
 import { toast } from "@/hooks/use-toast";
 import { useMemo } from "react";
@@ -29,7 +29,7 @@ const NGOPage = () => {
 
   return (
     <div className="max-w-4xl">
-      <div className="flex items-end justify-between flex-wrap gap-3 mb-6">
+      <div className="flex items-end justify-between flex-wrap gap-3 mb-8">
         <div>
           <span className="chip mb-3">NGO Dashboard</span>
           <h2 className="font-display text-3xl font-semibold">Incoming food requests</h2>
@@ -38,9 +38,9 @@ const NGOPage = () => {
       </div>
 
       {requests.length === 0 && (
-        <div className="panel p-12 text-center">
-          <div className="mx-auto h-12 w-12 rounded-full bg-secondary grid place-items-center mb-3">
-            <Inbox className="h-5 w-5 text-muted-foreground" />
+        <div className="panel text-center">
+          <div className="mx-auto h-14 w-14 rounded-full bg-[hsl(38_60%_92%)] grid place-items-center mb-3 border border-[#ebebeb]">
+            <span className="text-2xl" role="img" aria-label="warm meal">🍲</span>
           </div>
           <h3 className="font-display text-xl font-semibold">No requests yet</h3>
           <p className="text-sm text-muted-foreground mt-1">Submit one from the Restaurant tab.</p>
@@ -48,7 +48,7 @@ const NGOPage = () => {
       )}
 
       {upcoming.length > 0 && (
-        <section className="mb-8">
+        <section className="mb-10">
           <div className="flex items-center gap-2 mb-3">
             <CalendarClock className="h-4 w-4 text-primary" />
             <h3 className="font-display text-lg font-semibold">Upcoming pickups</h3>
@@ -85,7 +85,7 @@ interface RowProps {
 }
 
 const RequestRow = ({ r, setRequestStatus, setRequestStage, schedule }: RowProps) => (
-  <div className="panel p-5 space-y-4">
+  <div className="panel space-y-4">
     <div className="flex flex-col md:flex-row md:items-center gap-4">
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap mb-1">

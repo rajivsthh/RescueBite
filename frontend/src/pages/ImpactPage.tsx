@@ -1,10 +1,6 @@
 import { useAppStore } from "@/store/AppStore";
 import { NGOS } from "@/lib/data";
 import {
-  Utensils,
-  HeartHandshake,
-  Truck,
-  Leaf,
   CalendarClock,
   PartyPopper,
   Sparkles,
@@ -43,10 +39,6 @@ const ImpactPage = () => {
   );
 
   const cards = [
-    { label: "Total meals saved", value: totals.mealsSaved, icon: Utensils },
-    { label: "NGOs connected", value: `${totals.ngosConnected} / ${NGOS.length}`, icon: HeartHandshake },
-    { label: "Deliveries completed", value: totals.deliveriesCompleted, icon: Truck },
-    { label: "CO₂ saved", value: `${co2Kg.toFixed(1)} kg`, icon: Leaf, accent: true as const },
     { label: "Meals saved today", value: mealsSavedToday, icon: Sunrise, live: true as const },
     { label: "Predicted waste prevented", value: `${totals.predictedWastePrevented} meals`, icon: Sparkles },
     { label: "Scheduled pickups", value: totals.scheduledPickups, icon: CalendarClock },
@@ -83,14 +75,14 @@ const ImpactPage = () => {
 
   return (
     <div className="max-w-5xl">
-      <div className="mb-6">
+      <div className="mb-8">
         <span className="chip mb-3">Impact</span>
         <h2 className="font-display text-3xl font-semibold">Every meal counts.</h2>
         <p className="text-sm text-muted-foreground mt-1">Live tally across the Kathmandu network.</p>
       </div>
 
       {/* Summary stat bar */}
-      <div className="panel p-4 mb-6 grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-border">
+      <div className="panel mb-8 grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-border">
         <SummaryStat icon={<Store className="h-3.5 w-3.5" />} label="Total Donors" value={totalDonors} />
         <SummaryStat icon={<HeartHandshake className="h-3.5 w-3.5" />} label="Total NGOs" value={NGOS.length} />
         <SummaryStat icon={<Truck className="h-3.5 w-3.5" />} label="Total Deliveries" value={totals.deliveriesCompleted} />
@@ -99,7 +91,7 @@ const ImpactPage = () => {
 
       {/* Top volunteer of the day */}
       {topVolunteerToday && (
-        <div className="panel p-6 mb-6 flex items-center justify-between flex-wrap gap-4 bg-gradient-to-br from-primary-soft to-card">
+        <div className="panel mb-8 flex items-center justify-between flex-wrap gap-4 bg-gradient-to-br from-primary-soft to-card">
           <div className="flex items-center gap-4">
             <div className="h-14 w-14 rounded-full bg-primary text-primary-foreground grid place-items-center">
               <Award className="h-6 w-6" />
@@ -126,7 +118,7 @@ const ImpactPage = () => {
           const isAccent = "accent" in c && c.accent;
           const isLive = "live" in c && c.live;
           return (
-            <div key={c.label} className="panel p-6">
+            <div key={c.label} className="panel">
               <div
                 className={`h-9 w-9 rounded-lg grid place-items-center mb-4 ${
                   isAccent ? "bg-success/15 text-success" : "bg-primary-soft text-primary"
@@ -143,21 +135,23 @@ const ImpactPage = () => {
                   </span>
                 )}
               </div>
-              <div className="font-display text-4xl font-semibold mt-2">{c.value}</div>
+              <div className="text-[36px] font-bold leading-tight mt-2 text-[#1a3a2a]">{c.value}</div>
             </div>
           );
         })}
       </div>
 
+      <div className="my-8 border-t border-[#ebebeb]" />
+
       <ImpactRescueMap />
 
-      <div className="grid lg:grid-cols-3 gap-4 mt-6">
+      <div className="grid lg:grid-cols-3 gap-4 mt-8">
         <Leaderboard title="Top restaurants" entries={restaurantRanking} unit="meals" />
         <Leaderboard title="Top party palaces" entries={eventRanking} unit="meals" />
         <Leaderboard title="Top volunteers" entries={volunteerRanking.map((v) => ({ name: v.name, value: v.meals }))} unit="meals delivered" />
       </div>
 
-      <div className="panel p-6 lg:p-8 mt-6">
+      <div className="panel mt-8">
         <h3 className="font-display text-xl font-semibold mb-4">Recent activity</h3>
         {requests.length === 0 ? (
           <p className="text-sm text-muted-foreground">No activity yet — submit a request to see it here.</p>
@@ -178,7 +172,7 @@ const ImpactPage = () => {
       </div>
 
       {events.length > 0 && (
-        <div className="panel p-6 lg:p-8 mt-6">
+        <div className="panel mt-8">
           <h3 className="font-display text-xl font-semibold mb-4">Event predictions log</h3>
           <ul className="divide-y divide-border">
             {events.slice(0, 6).map((e) => (
@@ -217,7 +211,7 @@ const SummaryStat = ({
       <div className="text-[10px] uppercase tracking-widest text-muted-foreground truncate">
         {label}
       </div>
-      <div className="font-display text-lg font-semibold leading-tight">{value}</div>
+      <div className="text-[36px] font-bold leading-tight text-[#1a3a2a]">{value}</div>
     </div>
   </div>
 );
@@ -234,7 +228,7 @@ function buildRanking(items: { restaurantName: string; meals: number; status: st
 }
 
 const Leaderboard = ({ title, entries, unit }: { title: string; entries: RankEntry[]; unit: string }) => (
-  <div className="panel p-6">
+  <div className="panel">
     <div className="flex items-center gap-2 mb-3">
       <Trophy className="h-4 w-4 text-accent" />
       <h4 className="font-display text-lg font-semibold">{title}</h4>

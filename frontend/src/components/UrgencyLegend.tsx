@@ -6,15 +6,15 @@ const items = [
 
 const UrgencyLegend = () => (
   <div className="flex flex-wrap items-center gap-2">
-    <span className="text-[11px] uppercase tracking-widest text-muted-foreground mr-1">
+    <span className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground mr-1">
       Urgency legend
     </span>
     {items.map((i) => (
       <span
         key={i.label}
-        className={`inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full border ${i.cls}`}
+        className={`inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.06em] px-1.5 py-[2px] rounded-[999px] border ${i.cls}`}
       >
-        <span className="h-1.5 w-1.5 rounded-full bg-current" />
+        <span className="h-1 w-1 rounded-full bg-current" />
         {i.label} <span className="font-normal opacity-70">{i.sub}</span>
       </span>
     ))}

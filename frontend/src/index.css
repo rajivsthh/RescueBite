@@ -145,8 +145,10 @@
 
 @layer components {
   .panel {
-    @apply bg-card rounded-2xl border border-border;
-    box-shadow: var(--shadow-card);
+    @apply bg-card rounded-2xl;
+    border: 1px solid #ebebeb;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 24px;
   }
   .chip {
     @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium;

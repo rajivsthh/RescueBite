@@ -129,7 +129,7 @@ const Layout = () => {
         </section>
       )}
 
-      <main className="container flex-1 py-8">
+      <main className="container flex-1 py-12">
         <Outlet />
       </main>
 
