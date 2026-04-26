@@ -1,6 +1,9 @@
 import { useAppStore } from "@/store/AppStore";
 import { NGOS } from "@/lib/data";
 import {
+  HeartHandshake,
+  Truck,
+  Leaf,
   CalendarClock,
   PartyPopper,
   Sparkles,

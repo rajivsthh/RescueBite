@@ -13,9 +13,9 @@ const Index = () => {
           </span>
           <h1 className="font-display text-5xl md:text-7xl font-bold leading-[0.98] tracking-[-0.035em]">
             Food shared,
-            <span className="italic text-primary"> dignity restored.</span>
+            <span className="text-primary"> dignity restored.</span>
           </h1>
-          <blockquote className="mt-6 font-display text-xl md:text-2xl italic text-foreground/90">
+          <blockquote className="mt-6 text-[18px] md:text-[20px] font-medium text-[#4a4a4a]">
             "Every rescued meal saves effort, money, and hope."
           </blockquote>
 
