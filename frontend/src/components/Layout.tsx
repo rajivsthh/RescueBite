@@ -1,6 +1,7 @@
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { Leaf, House, Store, HeartHandshake, Bike, BarChart3, PartyPopper, LineChart } from "lucide-react";
 import { cn } from "@/lib/utils";
+import CopilotChatWidget from "@/components/CopilotChatWidget";
 
 const navItems = [
   { to: "/", label: "Home", icon: House },
@@ -139,6 +140,8 @@ const Layout = () => {
           <span>Demo build · hardcoded NGO directory</span>
         </div>
       </footer>
+
+      <CopilotChatWidget />
     </div>
   );
 };
