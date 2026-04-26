@@ -1,5 +1,6 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { MessageCircle, Send, X } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 type ChatRole = "user" | "copilot";
 
@@ -11,13 +12,27 @@ interface ChatMessage {
 
 const uid = () => Math.random().toString(36).slice(2, 10);
 
-const INITIAL_MESSAGES: ChatMessage[] = [
-  {
-    id: uid(),
-    role: "copilot",
-    text: "Hi, I am RescueBite Copilot. Ask me about routes, pickups, NGOs, or impact metrics.",
-  },
-];
+const getTabGreeting = (pathname: string) => {
+  if (pathname === "/restaurant") {
+    return "Ready to log surplus food? I can help you fill the form or explain how matching works.";
+  }
+  if (pathname === "/event") {
+    return "Planning an event? I can help you predict surplus and schedule NGO pickups in advance.";
+  }
+  if (pathname === "/ngo") {
+    return "Hi! I can help you understand incoming requests or explain the match scoring system.";
+  }
+  if (pathname === "/volunteer") {
+    return "Need help with your deliveries or want to optimize your route?";
+  }
+  if (pathname === "/analytics") {
+    return "Want help reading the waste patterns or understanding what the charts mean?";
+  }
+  if (pathname === "/impact") {
+    return "Want to know how CO2 savings are calculated or how the live map works?";
+  }
+  return "Hi! I'm RescueBite Copilot. Want to donate food or find an NGO near you?";
+};
 
 const getCopilotReply = (input: string) => {
   const lower = input.toLowerCase();
@@ -34,10 +49,19 @@ const getCopilotReply = (input: string) => {
 };
 
 const CopilotChatWidget = () => {
+  const { pathname } = useLocation();
+  const greeting = useMemo(() => getTabGreeting(pathname), [pathname]);
+
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
-  const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES);
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    {
+      id: uid(),
+      role: "copilot",
+      text: greeting,
+    },
+  ]);
 
   const listRef = useRef<HTMLDivElement | null>(null);
 
@@ -47,6 +71,14 @@ const CopilotChatWidget = () => {
     if (!listRef.current) return;
     listRef.current.scrollTop = listRef.current.scrollHeight;
   }, [messages, typing, open]);
+
+  useEffect(() => {
+    setMessages((prev) => {
+      const hasUserMessage = prev.some((m) => m.role === "user");
+      if (hasUserMessage) return prev;
+      return [{ id: uid(), role: "copilot", text: greeting }];
+    });
+  }, [greeting]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
