@@ -34,27 +34,66 @@ const getTabGreeting = (pathname: string) => {
   return "Hi! I'm RescueBite Copilot. Want to donate food or find an NGO near you?";
 };
 
+const getQuickReplies = (pathname: string): string[] => {
+  if (pathname === "/restaurant") {
+    return ["How do I donate food?", "How does matching work?", "Is the food safe?"];
+  }
+  if (pathname === "/event") {
+    return ["What is the event predictor?", "How does matching work?", "How is CO2 calculated?"];
+  }
+  if (pathname === "/ngo") {
+    return ["How does matching work?", "What does urgent mean?", "Is the food safe?"];
+  }
+  if (pathname === "/volunteer") {
+    return ["How does route optimization work?", "What does urgent mean?", "How does matching work?"];
+  }
+  if (pathname === "/analytics") {
+    return ["How is CO2 calculated?", "How does matching work?", "What does urgent mean?"];
+  }
+  if (pathname === "/impact") {
+    return ["How is CO2 calculated?", "How does matching work?", "How does route optimization work?"];
+  }
+  return ["How do I donate food?", "How does matching work?", "How is CO2 calculated?"];
+};
+
 const getCopilotReply = (input: string) => {
-  const lower = input.toLowerCase();
-  if (lower.includes("route") || lower.includes("volunteer")) {
-    return "I can help optimize pickup order by distance and urgency. Open the Volunteer tab for live route guidance.";
+  const normalized = input.toLowerCase().replace(/[?!.]/g, "").trim();
+
+  if (normalized === "how does matching work") {
+    return "Matching uses a weighted score: distance, urgency, and NGO capacity. A simple version is score = 0.4 x distance-fit + 0.35 x urgency-fit + 0.25 x capacity-fit. Closer NGOs, faster-expiring food, and available capacity rank higher.";
   }
-  if (lower.includes("ngo") || lower.includes("donation") || lower.includes("request")) {
-    return "NGO-side actions are in the NGO tab: accept requests, track pickup stage, and monitor scheduled arrivals.";
+  if (normalized === "how is co2 calculated") {
+    return "We estimate 2.5 kg CO2 prevented per 1 kg of food saved. Example: if 10 kg food is rescued, estimated CO2 savings are about 25 kg.";
   }
-  if (lower.includes("impact") || lower.includes("stats") || lower.includes("co2")) {
-    return "Impact tab shows meals saved, scheduled pickups, event contributions, and estimated CO2 reduction in real time.";
+  if (normalized === "what does urgent mean") {
+    return "Urgent means food expiring within 2 hours, so it gets prioritized for immediate pickup and matching.";
   }
-  return "Got it. I can help with donation flow, volunteer routing, NGO triage, and impact insights. What do you want to do next?";
+  if (normalized === "how do i donate food") {
+    return "Go to the Restaurant tab, enter restaurant name, location, food type, meal quantity, and expiry window, then submit. The system suggests NGO matches, and once accepted, a volunteer pickup is created.";
+  }
+  if (normalized === "is the food safe") {
+    return "Safety uses donation time windows plus quality checks. Food nearing unsafe windows is downgraded or blocked, and the AI photo check helps flag visible spoilage risks before matching.";
+  }
+  if (normalized === "how does route optimization work") {
+    return "Route optimization uses a nearest-neighbor approach: it picks the next closest stop iteratively, then ends at dropoff. This reduces travel distance and helps deliver fresher food faster.";
+  }
+  if (normalized === "what is the event predictor") {
+    return "The event predictor estimates surplus from inputs like event type and guest count. Weddings and corporates use different baseline factors, then the model projects expected leftover meals for pre-scheduled NGO pickups.";
+  }
+
+  return "I'm still learning! Try asking about donations, matching, CO2, or routes.";
 };
 
 const CopilotChatWidget = () => {
   const { pathname } = useLocation();
   const greeting = useMemo(() => getTabGreeting(pathname), [pathname]);
+  const quickReplies = useMemo(() => getQuickReplies(pathname), [pathname]);
 
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
+  const [quickRepliesDismissed, setQuickRepliesDismissed] = useState(false);
+  const [firstOpenDone, setFirstOpenDone] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: uid(),
@@ -71,6 +110,12 @@ const CopilotChatWidget = () => {
     if (!listRef.current) return;
     listRef.current.scrollTop = listRef.current.scrollHeight;
   }, [messages, typing, open]);
+
+  useEffect(() => {
+    if (open && !firstOpenDone) {
+      setFirstOpenDone(true);
+    }
+  }, [open, firstOpenDone]);
 
   useEffect(() => {
     setMessages((prev) => {
@@ -96,6 +141,23 @@ const CopilotChatWidget = () => {
       setMessages((prev) => [...prev, { id: uid(), role: "copilot", text: reply }]);
     }, 900);
   };
+
+  const sendQuickReply = (text: string) => {
+    if (typing) return;
+    setQuickRepliesDismissed(true);
+
+    const userMessage: ChatMessage = { id: uid(), role: "user", text };
+    setMessages((prev) => [...prev, userMessage]);
+    setTyping(true);
+
+    const reply = getCopilotReply(text);
+    window.setTimeout(() => {
+      setTyping(false);
+      setMessages((prev) => [...prev, { id: uid(), role: "copilot", text: reply }]);
+    }, 900);
+  };
+
+  const showQuickReplies = open && firstOpenDone && !quickRepliesDismissed && messages.every((m) => m.role === "copilot");
 
   return (
     <div className="fixed bottom-5 right-5 z-[70]">
@@ -146,6 +208,21 @@ const CopilotChatWidget = () => {
                   <span className="h-1.5 w-1.5 rounded-full bg-[#97a092] animate-bounce" />
                 </div>
               </div>
+            </div>
+          )}
+
+          {showQuickReplies && (
+            <div className="pt-1 flex flex-wrap gap-2">
+              {quickReplies.map((q) => (
+                <button
+                  key={q}
+                  type="button"
+                  onClick={() => sendQuickReply(q)}
+                  className="text-left text-[12px] rounded-full border border-[#dbe3d7] bg-[#faf9f6] px-3 py-1.5 text-[#1a3a2a] hover:bg-[#f5f5f0]"
+                >
+                  {q}
+                </button>
+              ))}
             </div>
           )}
         </div>
