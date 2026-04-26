@@ -85,17 +85,17 @@ const Layout = () => {
               Live in Kathmandu Valley
             </span>
             {isEvent ? (
-              <h1 className="font-display text-4xl md:text-6xl font-semibold leading-[1.05] tracking-tight">
-                Plan rescue —<br />
-                <span className="italic text-primary">before the waste happens.</span>
+              <h1 className="font-display text-4xl md:text-6xl font-bold leading-[1.02] tracking-[-0.03em]">
+                Plan rescue<br />
+                <span className="text-primary">before the waste happens.</span>
               </h1>
             ) : (
-              <h1 className="font-display text-4xl md:text-6xl font-semibold leading-[1.05] tracking-tight">
-                No food is waste —<br />
-                <span className="italic text-primary">it's just a misplaced resource.</span>
+              <h1 className="font-display text-4xl md:text-6xl font-bold leading-[1.02] tracking-[-0.03em]">
+                No food is waste<br />
+                <span className="text-primary">it's just a misplaced resource.</span>
               </h1>
             )}
-            <p className="mt-5 text-base md:text-lg text-muted-foreground max-w-xl">
+            <p className="mt-5 text-[14px] md:text-[16px] leading-[1.7] text-[#4a4a4a] max-w-xl">
               {isEvent
                 ? "Party palaces and event organisers predict surplus from guest count, then notify NGOs in advance."
                 : "Restaurants log surplus meals. We instantly route them to the nearest NGOs with capacity, prioritising urgency."}
