@@ -20,7 +20,7 @@ const Layout = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="glass-nav sticky top-0 z-30">
+      <header className="border-b border-border/70 bg-background/70 backdrop-blur-md sticky top-0 z-30">
         <div className="container flex items-center justify-between h-16">
           <NavLink to="/" className="flex items-center gap-2">
             <span className="h-9 w-9 rounded-xl bg-primary text-primary-foreground grid place-items-center">
