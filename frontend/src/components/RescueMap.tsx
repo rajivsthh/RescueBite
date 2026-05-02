@@ -5,9 +5,9 @@ import { AREA_COORDS, KATHMANDU_CENTER } from "@/lib/mapData";
 
 const ngoIcon = divIcon({
   className: "marker-wrap",
-  html: '<div class="marker marker-ngo"></div>',
-  iconSize: [22, 22],
-  iconAnchor: [11, 11],
+  html: '<div class="rescue-marker rescue-marker-ngo" style="width:18px;height:18px;border-radius:50%;display:block"></div>',
+  iconSize: [18, 18],
+  iconAnchor: [9, 9],
 });
 
 const RescueMap = () => {

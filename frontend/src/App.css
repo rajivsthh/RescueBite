@@ -92,10 +92,10 @@ body{
 .chip{display:inline-flex;align-items:center;gap:.5rem;padding:.25rem .5rem;border-radius:999px;background:rgba(255,255,255,0.5);border:1px solid rgba(0,0,0,0.04);font-size:.9rem}
 
 /* marker styles for leaflet divIcons */
-.marker{width:18px;height:18px;border-radius:50%;box-shadow:0 4px 10px rgba(0,0,0,0.12);border:2px solid white}
-.marker.marker-ngo{background:var(--marker-ngo)}
-.marker.marker-restaurant{background:var(--marker-restaurant)}
-.marker.marker-event{background:var(--marker-event)}
+.rescue-marker{width:18px;height:18px;border-radius:50%;box-shadow:0 4px 10px rgba(0,0,0,0.12);border:2px solid white;display:block}
+.rescue-marker.rescue-marker-ngo{background:var(--marker-ngo)}
+.rescue-marker.rescue-marker-restaurant{background:var(--marker-restaurant)}
+.rescue-marker.rescue-marker-event{background:var(--marker-event)}
 
 /* accessibility */
 @media (prefers-reduced-motion: reduce){
