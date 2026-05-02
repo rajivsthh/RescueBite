@@ -1,48 +1,105 @@
-/*
-  App.css — Commented out by developer
-  Uncomment the block below to restore original styles.
+/* Global design tokens and fonts for the new homepage redesign */
 
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:wght@500;700;900&display=swap');
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-} 
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+:root{
+  --primary: #1a3c2e; /* forest green */
+  --bg: #fdf6ec; /* warm cream */
+  --accent: #e07b2a; /* saffron */
+  --muted: #6b6b6b;
+  --marker-ngo: #1a3c2e;
+  --marker-restaurant: #e07b2a;
+  --marker-event: #2b6fbf;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+html,body,#root{height:100%}
+body{
+  margin:0;
+  background:var(--bg);
+  color:#111;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
 
-.card {
-  padding: 2em;
+.font-display{font-family: 'Playfair Display', serif;}
+
+/* Glassmorphism navbar */
+.glass-nav{
+  background: rgba(255,255,255,0.60);
+  border-bottom: 1px solid rgba(26,60,46,0.06);
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  box-shadow: 0 6px 18px rgba(10,10,10,0.06);
 }
 
-.read-the-docs {
-  color: #888;
+/* Hero */
+.hero-wrap{position:relative;overflow:hidden;border-radius:16px;padding:3.5rem 1.5rem;margin:1.25rem 0}
+.hero-gradient{
+  position:absolute;inset:0;z-index:0;mix-blend-mode:normal;pointer-events:none;
+  background: linear-gradient(120deg,#fdf6ec 0%, #eef7ea 40%, #e9f3de 60%, #f3f7ee 100%);
+  background-size: 300% 300%;
+  animation: gradientShift 10s ease infinite;
+  opacity:0.95;
 }
-*/
+
+@keyframes gradientShift{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+/* floating leaf/particle */
+.leaf{
+  position:absolute;z-index:1;opacity:0.85;will-change:transform,opacity;
+  animation: floatLeaf linear infinite;
+}
+.leaf.s1{width:36px;height:36px;left:6%;top:18%;transform:rotate(-10deg);animation-duration:9s}
+.leaf.s2{width:28px;height:28px;left:84%;top:12%;transform:rotate(20deg);animation-duration:12s}
+.leaf.s3{width:48px;height:48px;left:72%;top:62%;transform:rotate(-5deg);animation-duration:14s}
+
+@keyframes floatLeaf{
+  0%{transform:translateY(0) rotate(0deg);opacity:0.9}
+  50%{transform:translateY(-14px) rotate(8deg);opacity:1}
+  100%{transform:translateY(0) rotate(0deg);opacity:0.9}
+}
+
+/* Hero content should sit above decorative layers */
+.hero-content{position:relative;z-index:2}
+
+.hero-title{font-weight:800;color:var(--primary);}
+.hero-sub{color:var(--muted);max-width:64ch}
+
+/* Impact stats */
+.impact-stats{display:flex;gap:1.25rem;justify-content:center;align-items:center;margin-top:1rem}
+.impact-stats .stat{font-weight:700;color:var(--primary)}
+
+/* CTA */
+.btn-cta{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.25rem;border-radius:999px;background:var(--primary);color:white;font-weight:700;box-shadow:0 6px 18px rgba(26,60,46,0.12);transition:transform .18s cubic-bezier(.2,.9,.2,1),box-shadow .18s}
+.btn-cta:hover{transform:scale(1.04);box-shadow:0 10px 30px rgba(224,123,42,0.18),0 2px 6px rgba(26,60,46,0.12)}
+.btn-cta:active{transform:scale(.99)}
+
+/* RescueMap card and legend */
+.rescue-card{border-radius:1rem;overflow:hidden;box-shadow:0 12px 30px rgba(10,10,10,0.08);border:1px solid rgba(26,60,46,0.06)}
+.map-legend{display:flex;gap:1rem;align-items:center;margin-top:.75rem}
+.legend-item{display:flex;gap:.5rem;align-items:center;font-size:.9rem;color:var(--muted)}
+.legend-dot{width:12px;height:12px;border-radius:999px}
+.legend-dot.ngo{background:var(--marker-ngo)}
+.legend-dot.restaurant{background:var(--marker-restaurant)}
+.legend-dot.event{background:var(--marker-event)}
+
+/* small helpers */
+.chip{display:inline-flex;align-items:center;gap:.5rem;padding:.25rem .5rem;border-radius:999px;background:rgba(255,255,255,0.5);border:1px solid rgba(0,0,0,0.04);font-size:.9rem}
+
+/* marker styles for leaflet divIcons */
+.marker{width:18px;height:18px;border-radius:50%;box-shadow:0 4px 10px rgba(0,0,0,0.12);border:2px solid white}
+.marker.marker-ngo{background:var(--marker-ngo)}
+.marker.marker-restaurant{background:var(--marker-restaurant)}
+.marker.marker-event{background:var(--marker-event)}
+
+/* accessibility */
+@media (prefers-reduced-motion: reduce){
+  .hero-gradient, .leaf, .btn-cta{animation:none;transition:none}
+}
+
 

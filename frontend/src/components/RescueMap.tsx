@@ -4,15 +4,15 @@ import { areaName, NGOS } from "@/lib/data";
 import { AREA_COORDS, KATHMANDU_CENTER } from "@/lib/mapData";
 
 const ngoIcon = divIcon({
-  className: "emoji-marker-wrap",
-  html: '<div class="emoji-marker emoji-ngo">🏠</div>',
-  iconSize: [30, 30],
-  iconAnchor: [15, 15],
+  className: "marker-wrap",
+  html: '<div class="marker marker-ngo"></div>',
+  iconSize: [22, 22],
+  iconAnchor: [11, 11],
 });
 
 const RescueMap = () => {
   return (
-    <section className="panel p-5 md:p-6 border border-primary/20">
+    <section className="rescue-card p-5 md:p-6">
       <div className="mb-4">
         <div>
           <h2 className="font-display text-2xl md:text-3xl font-semibold">Rescue Map</h2>
@@ -20,7 +20,7 @@ const RescueMap = () => {
         </div>
       </div>
 
-      <div className="h-[320px] md:h-[380px] overflow-hidden rounded-2xl border border-primary/20 shadow-inner">
+      <div className="h-[320px] md:h-[380px] overflow-hidden rounded-2xl">
         <MapContainer center={KATHMANDU_CENTER} zoom={12} scrollWheelZoom className="h-full w-full">
           <TileLayer
             attribution='&copy; OpenStreetMap contributors &copy; CARTO'
@@ -41,6 +41,12 @@ const RescueMap = () => {
             </Marker>
           ))}
         </MapContainer>
+      </div>
+
+      <div className="map-legend">
+        <div className="legend-item"><span className="legend-dot ngo" /> NGO</div>
+        <div className="legend-item"><span className="legend-dot restaurant" /> Restaurant</div>
+        <div className="legend-item"><span className="legend-dot event" /> Event</div>
       </div>
     </section>
   );
